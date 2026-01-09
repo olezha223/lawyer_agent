@@ -1,12 +1,12 @@
 from typing import Optional
 
 from langchain_core.messages import BaseMessage
-from langchain_openai import ChatOpenAI
-from langchain.agents import create_agent
-from langchain.messages import SystemMessage, HumanMessage, AIMessage
+from langchain_gigachat import GigaChat
+from langgraph.prebuilt import create_react_agent
 
-from ..tools import AnalyzeRiskTool
-from ...domain.services.ipdf_adapter import IPdfAdapter
+from src.application.tools import AnalyzeRiskTool
+from src.domain.services.ipdf_adapter import IPdfAdapter
+from src.shared.config import config
 
 
 class LLMAgentOrchestrator:
@@ -29,19 +29,22 @@ class LLMAgentOrchestrator:
         )
         if document_text:
             system_prompt += f"Документ для анализа:\n{document_text[:10000]}\n\n"
-        return [
-            SystemMessage(system_prompt),
-            HumanMessage(user_prompt)
-        ]
+        return {
+            "messages": [
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_prompt}
+            ]
+        }
 
     def get_agent(self):
-        model = ChatOpenAI(
-            model="deepseek-r1",
-            temperature=0.3,
-            base_url="https://api.llm7.io/v1"
+        model = GigaChat(
+            model="GigaChat-2-Max",
+            verify_ssl_certs=False,
+            credentials=config.GIGACHAT_API_KEY,
+            scope='GIGACHAT_API_PERS'
         )
         tools = [self.analyze_risk_tool]
-        agent = create_agent(model=model, tools=tools)
+        agent = create_react_agent(model=model, tools=tools)
         return agent
 
     def execute(
@@ -61,4 +64,19 @@ class LLMAgentOrchestrator:
             document_text = self.pdf_adapter.parse_bytes(pdf_bytes)
         agent = self.get_agent()
         response = agent.invoke(self._prepare_messages(text, document_text))
-        return response.content
+        return response
+
+
+if __name__ == "__main__":
+    orch = LLMAgentOrchestrator(
+        pdf_adapter=IPdfAdapter(),
+        analyze_risk_tool=AnalyzeRiskTool()
+    )
+
+    with open('../../../examples/data/Договор 10.00.02.26.03 Швецов Олег Андреевич.pdf', 'rb') as f:
+        file_bytes = f.read()
+
+    print(orch.execute(
+        text='какие основные пункты в договоре?',
+        pdf_bytes=file_bytes
+    )['messages'][-1].content)

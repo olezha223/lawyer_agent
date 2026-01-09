@@ -17,11 +17,11 @@ def upload_document():
 def analyze_document(
     orchestrator: FromDishka[LLMAgentOrchestrator],
     query: str = Form(..., description="Что сделать с документом"),
-    file: UploadFile = File(..., description="Загружаемый"),
+    file: UploadFile = File(..., description="Загружаемый файл"),
 ):
     """Анализ документа через агента"""
     if file.content_type != "application/pdf":
-        return {"error": "Только PDF файлы"}
+        return {"error": "Доступны для анализа только PDF файлы"}
     pdf_bytes = file.read()
 
     return orchestrator.execute(

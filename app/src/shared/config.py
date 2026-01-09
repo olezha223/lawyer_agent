@@ -10,6 +10,7 @@ load_dotenv()
 @dataclass
 class Config:
     OPENAI_API_KEY: str = os.getenv("OPENAI_API_KEY")
+    GIGACHAT_API_KEY: str = os.getenv("GIGACHAT_API_KEY")
     ALLOW_ORIGINS: str = os.getenv("ALLOW_ORIGINS", "*")
     ALLOW_CREDENTIALS: str = os.getenv("ALLOW_CREDENTIALS", "*")
     ALLOW_METHODS: str = os.getenv("ALLOW_METHODS", "*")
