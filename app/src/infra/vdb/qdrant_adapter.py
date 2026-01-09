@@ -63,7 +63,7 @@ class QdrantAdapter(IVectorDB):
         response = self._client.search(
             collection_name=collection_name,
             query_vector=embedding,
-            limit=30,
+            limit=10,
             with_vectors=True
         )
         return [
@@ -82,10 +82,10 @@ class QdrantAdapter(IVectorDB):
             for res in response
         ]
 
-    def create_collection(self, collection_name: str = 'baseline', **kwargs) -> str:
+    def create_collection(self, collection_name: str = 'baseline', size: int = 1024) -> str:
         self._client.create_collection(
             collection_name=collection_name,
-            **kwargs
+            vectors_config=models.VectorParams(size=size, distance="Cosine"),
         )
         return 'success'
 
