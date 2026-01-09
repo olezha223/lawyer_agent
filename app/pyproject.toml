@@ -4,6 +4,7 @@ version = "0.1.0"
 description = "Add your description here"
 requires-python = ">=3.11"
 dependencies = [
+    "bs4>=0.0.2",
     "dishka>=1.7.2",
     "fastapi>=0.128.0",
     "langchain-gigachat>=0.3.12",
@@ -11,4 +12,5 @@ dependencies = [
     "pypdf2>=3.0.1",
     "python-dotenv>=1.2.1",
     "qdrant-client>=1.16.2",
+    "sentence-transformers>=5.2.0",
 ]
