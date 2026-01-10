@@ -60,26 +60,22 @@ class QdrantAdapter(IVectorDB):
             embedding: list[float],
             collection_name: str = 'baseline'
     ) -> List[ExtendedVectorisedDocument]:
-        response = self._client.search(
+        response = self._client.query_points(
             collection_name=collection_name,
-            query_vector=embedding,
+            query=embedding,
             limit=10,
-            with_vectors=True
+            with_vectors=True,
+            with_payload=True
         )
         return [
             ExtendedVectorisedDocument(
                 text=res.payload['text'],
-                metadata={
-                    "title": res.payload.get('title'),
-                    "kind": res.payload['kind'],
-                    "web_id": res.payload['web_id'],
-                    "url": res.payload['url'],
-                },
+                metadata=res.payload,
                 embedding=res.vector,
                 id=res.id,
                 distance=res.score,
             )
-            for res in response
+            for res in response.points
         ]
 
     def create_collection(self, collection_name: str = 'baseline', size: int = 1024) -> str:
