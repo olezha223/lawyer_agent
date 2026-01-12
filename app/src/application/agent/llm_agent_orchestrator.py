@@ -5,8 +5,7 @@ from langchain_gigachat import GigaChat
 from langgraph.prebuilt import create_react_agent
 from qdrant_client import QdrantClient
 
-from src.application.tools import AnalyzeRiskTool
-from src.application.tools.relevant_search import RagTool
+from src.application.tools import AnalyzeRiskTool, RagTool
 from src.domain.services.ipdf_adapter import IPdfAdapter
 from src.infra.embeddings.bge import BGEEmbedder
 from src.infra.pdf.pypdf2_adapter import PyPdf2Adapter
