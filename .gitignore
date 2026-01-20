@@ -1,4 +1,6 @@
 app/examples/data
+app/.idea
+.idea/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
