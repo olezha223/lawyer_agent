@@ -74,7 +74,7 @@ class LLMAgentOrchestrator:
 
 
 if __name__ == "__main__":
-    qdrant = QdrantAdapter(client=QdrantClient(host='localhost', port=6333))
+    qdrant = QdrantAdapter()
     orch = LLMAgentOrchestrator(
         pdf_adapter=PyPdf2Adapter(),
         analyze_risk_tool=AnalyzeRiskTool(),

@@ -1,4 +1,5 @@
 from dishka import FromDishka
+from dishka.integrations.fastapi import inject_sync
 from fastapi import APIRouter, Form, File, UploadFile
 
 from src.application.agent.llm_agent_orchestrator import LLMAgentOrchestrator
@@ -10,11 +11,13 @@ document_router = APIRouter(
 
 
 @document_router.post("/upload")
+@inject_sync
 def upload_document():
     """Загрузка документа в базу знаний для RAG"""
     pass
 
 @document_router.post("/analyze")
+@inject_sync
 def analyze_document(
     orchestrator: FromDishka[LLMAgentOrchestrator],
     query: str = Form(..., description="Что сделать с документом"),

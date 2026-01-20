@@ -9,8 +9,8 @@ from src.domain.services.ivdb_adapter import IVectorDB
 class QdrantAdapter(IVectorDB):
     __slots__ = ("_client", )
 
-    def __init__(self, client: QdrantClient):
-        self._client = client
+    def __init__(self):
+        self._client = QdrantClient(host='localhost', port=6333)
 
     @staticmethod
     def get_payload(document: VectorisedDocument) -> dict:
